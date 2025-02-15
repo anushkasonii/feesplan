@@ -42,36 +42,33 @@ const FeeDetails = () => {
   const generatePDF = (student) => {
     const doc = new jsPDF();
     
-    doc.setFillColor(83, 56, 158);
-    doc.rect(0, 0, 210, 40, 'F');
-
-    doc.setFontSize(28);
-    doc.setTextColor(255, 255, 255);
-    doc.text('Receipt', 20, 25);
-
+    // School name and address at the top
     doc.setFontSize(24);
-    doc.setTextColor(255, 255, 255);
-    doc.text('KidzShala', 80, 25);
-    
-    doc.setFontSize(10);
-    doc.text('Near Dona Paula, 3rd main road, 5th Cross', 80, 32);
-    doc.text('Gurgaon, 122334 | Phone: 9761118811', 80, 37);
-    
-    doc.rect(120, 45, 70, 12, 'F');
     doc.setTextColor(83, 56, 158);
+    doc.text('KidzShala', 105, 25, { align: 'center' });
+    
+    // Thin purple header
+    doc.setFillColor(83, 56, 158);
+    doc.rect(0, 0, 210, 3, 'F');
+    
     doc.setFontSize(10);
-    doc.text(`Receipt #${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`, 165, 52);
+    doc.text('Near Dona Paula, 3rd main road, 5th Cross', 105, 32, { align: 'center' });
+    doc.text('Gurgaon, 122334 | Phone: 9761118811', 105, 37, { align: 'center' });
 
+    // Student Information box with receipt number inside
     doc.setDrawColor(83, 56, 158); 
     doc.setLineWidth(0.5);
-    doc.rect(15, 65, 180, 45);
+    doc.rect(15, 45, 180, 55);
 
+    // Student Information header with receipt number
     doc.setFillColor(242, 242, 252); 
-    doc.rect(15, 65, 180, 8, 'F');
+    doc.rect(15, 45, 180, 8, 'F');
     doc.setTextColor(83, 56, 158);
     doc.setFontSize(12);
-    doc.text('Student Information', 20, 70);
+    doc.text('Student Information', 20, 50);
+    doc.text(`Receipt #${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`, 140, 50);
 
+    // Student details
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(10);
     const leftCol = [
@@ -86,46 +83,51 @@ const FeeDetails = () => {
     ];
     
     leftCol.forEach((text, i) => {
-      doc.text(text, 20, 80 + (i * 10));
+      doc.text(text, 20, 60 + (i * 10));
     });
     rightCol.forEach((text, i) => {
-      doc.text(text, 110, 80 + (i * 10));
+      doc.text(text, 110, 60 + (i * 10));
     });
 
+    // Fee Details section
     doc.setFontSize(12);
     doc.setTextColor(83, 56, 158);
-    doc.text('Fee Details', 20, 125);
+    doc.text('Fee Details', 20, 110);
 
+    // Fee Details table header
     doc.setFillColor(242, 242, 252);
-    doc.rect(15, 130, 180, 10, 'F');
+    doc.rect(15, 115, 180, 10, 'F');
     doc.setDrawColor(220, 220, 220);
     doc.setLineWidth(0.1);
-    doc.line(15, 130, 195, 130); 
-    doc.line(15, 140, 195, 140);
-    doc.line(15, 130, 15, 140);
-    doc.line(195, 130, 195, 140);
-    doc.line(140, 130, 140, 140); 
+    doc.line(15, 115, 195, 115);
+    doc.line(15, 125, 195, 125);
+    doc.line(15, 115, 15, 125);
+    doc.line(195, 115, 195, 125);
+    doc.line(140, 115, 140, 125);
 
     doc.setTextColor(83, 56, 158);
     doc.setFontSize(10);
-    doc.text('Fee Type', 20, 136);
-    doc.text('Amount Paid', 145, 136);
+    doc.text('Fee Type', 20, 121);
+    doc.text('Amount Paid', 145, 121);
 
+    // Fee amount
     doc.setTextColor(0, 0, 0);
-    doc.rect(15, 140, 180, 10);
-    doc.text('Tuition Fee', 20, 146);
-    doc.text(`₹ ${parseInt(student.fee).toLocaleString('en-IN')}`, 145, 146);
+    doc.rect(15, 125, 180, 10);
+    doc.text('Tuition Fee', 20, 131);
+    doc.text(`₹ ${parseInt(student.fee).toLocaleString('en-IN')}`, 145, 131);
 
+    // Total
     doc.setFillColor(242, 242, 252);
-    doc.rect(15, 150, 180, 10, 'F');
+    doc.rect(15, 135, 180, 10, 'F');
     doc.setTextColor(83, 56, 158);
     doc.setFontSize(11);
-    doc.text('Total', 20, 156);
-    doc.text(`₹ ${parseInt(student.fee).toLocaleString('en-IN')}`, 145, 156);
+    doc.text('Total', 20, 141);
+    doc.text(`₹ ${parseInt(student.fee).toLocaleString('en-IN')}`, 145, 141);
 
+    // Footer
     doc.setTextColor(128, 128, 128);
     doc.setFontSize(9);
-    doc.text('Powered by KidzShala', 90, 280);
+    doc.text('Powered by KidzShala', 105, 280, { align: 'center' });
 
     doc.save(`${student.name}_receipt.pdf`);
   };
@@ -152,7 +154,6 @@ const FeeDetails = () => {
     
     return matchesStatus && matchesClass && matchesSearch && matchesDate;
   });
-
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4 }}>
@@ -183,7 +184,7 @@ const FeeDetails = () => {
           >
             <CardContent>
               <Typography variant="h6" sx={{ color: '#637381', mb: 1 }}>
-                Total Students
+                Total Fee
               </Typography>
               <Typography variant="h4" sx={{ color: '#212B36', fontWeight: 'bold' }}>
                 ₹{stats.totalFee}
@@ -191,7 +192,7 @@ const FeeDetails = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={10} md={3}>
+        <Grid item xs={12} md={3}>
           <Card 
             onClick={() => handleFilterClick('received')}
             sx={{
@@ -257,6 +258,38 @@ const FeeDetails = () => {
             </CardContent>
           </Card>
         </Grid>
+        <Grid item xs={12} md={3}>
+          <Card 
+            sx={{
+              cursor: 'pointer',
+              borderRadius: '8px',
+              position: 'relative',
+              overflow: 'visible',
+              width: '250px',
+              bgcolor: 'white',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '6px',
+                backgroundColor: '#1FB892',
+                borderTopLeftRadius: '8px',
+                borderTopRightRadius: '8px',
+              }
+            }}
+          >
+            <CardContent>
+              <Typography variant="h6" sx={{ color: '#637381', mb: 1 }}>
+                Total Students
+              </Typography>
+              <Typography variant="h4" sx={{ color: '#212B36', fontWeight: 'bold' }}>
+                {stats.totalCount}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
 
         {/* Filters and Table */}
         <Grid item xs={12}>
@@ -316,14 +349,16 @@ const FeeDetails = () => {
                       <TableCell>{student.status}</TableCell>
                       <TableCell>{dayjs(student.dueDate).format('DD/MM/YYYY')}</TableCell>
                       <TableCell>
-                        <Link
-                          component="button"
-                          variant="body2"
-                          onClick={() => generatePDF(student)}
-                          sx={{ color: '#1FB892', textDecoration: 'none', cursor: 'pointer' }}
-                        >
-                          PDF
-                        </Link>
+                        {student.status === 'Received' && (
+                          <Link
+                            component="button"
+                            variant="body2"
+                            onClick={() => generatePDF(student)}
+                            sx={{ color: '#1FB892', textDecoration: 'none', cursor: 'pointer' }}
+                          >
+                            PDF
+                          </Link>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
