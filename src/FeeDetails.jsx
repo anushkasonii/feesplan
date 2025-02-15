@@ -25,6 +25,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { useFeeContext } from './context/FeeContext';
 import { jsPDF } from 'jspdf';
+import kidzshalalogo from './kidzshalalogo.png';
+
 
 const FeeDetails = () => {
   const { studentFees, calculateStats, feePlans } = useFeeContext();
@@ -42,30 +44,36 @@ const FeeDetails = () => {
   const generatePDF = (student) => {
     const doc = new jsPDF();
     
-    // School name and address at the top
-    doc.setFontSize(24);
-    doc.setTextColor(83, 56, 158);
-    doc.text('KidzShala', 105, 25, { align: 'center' });
+    // Add logo at the top
+<img src={kidzshalalogo} alt="Kidzshala Logo" />
+
+
     
-    // Thin purple header
+    doc.addImage(kidzshalalogo, 'SVG', 15, 10, 50, 10);
+    
+    // Thin purple header (2-3px)
     doc.setFillColor(83, 56, 158);
-    doc.rect(0, 0, 210, 3, 'F');
+    doc.rect(0, 25, 210, 2, 'F');
     
+    // School address below header
     doc.setFontSize(10);
-    doc.text('Near Dona Paula, 3rd main road, 5th Cross', 105, 32, { align: 'center' });
-    doc.text('Gurgaon, 122334 | Phone: 9761118811', 105, 37, { align: 'center' });
+    doc.setTextColor(0, 0, 0);
+    doc.text('Near Dona Paula, 3rd main road, 5th Cross', 105, 35, { align: 'center' });
+    doc.text('Gurgaon, 122334 | Phone: 9761118811', 105, 40, { align: 'center' });
 
     // Student Information box with receipt number inside
-    doc.setDrawColor(83, 56, 158); 
+    doc.setDrawColor(83, 56, 158);
     doc.setLineWidth(0.5);
     doc.rect(15, 45, 180, 55);
 
-    // Student Information header with receipt number
-    doc.setFillColor(242, 242, 252); 
+    // Student Information header
+    doc.setFillColor(242, 242, 252);
     doc.rect(15, 45, 180, 8, 'F');
     doc.setTextColor(83, 56, 158);
     doc.setFontSize(12);
     doc.text('Student Information', 20, 50);
+    
+    // Receipt number inside student info box
     doc.text(`Receipt #${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`, 140, 50);
 
     // Student details
@@ -110,7 +118,7 @@ const FeeDetails = () => {
     doc.text('Fee Type', 20, 121);
     doc.text('Amount Paid', 145, 121);
 
-    // Fee amount
+    // Fee amount with rupee symbol
     doc.setTextColor(0, 0, 0);
     doc.rect(15, 125, 180, 10);
     doc.text('Tuition Fee', 20, 131);
@@ -124,13 +132,15 @@ const FeeDetails = () => {
     doc.text('Total', 20, 141);
     doc.text(`₹ ${parseInt(student.fee).toLocaleString('en-IN')}`, 145, 141);
 
-    // Footer
+    // Footer with logo
     doc.setTextColor(128, 128, 128);
     doc.setFontSize(9);
-    doc.text('Powered by KidzShala', 105, 280, { align: 'center' });
+    doc.text('Powered by', 90, 280);
+    doc.addImage(kidzshalalogo, 'SVG', 110, 275, 25, 5);
 
     doc.save(`${student.name}_receipt.pdf`);
   };
+
 
   const allFees = [...studentFees, ...feePlans.flatMap(plan => 
     Array(plan.installments).fill().map((_, index) => ({
